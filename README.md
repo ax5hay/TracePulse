@@ -1,6 +1,6 @@
 # Tracepulse
 
-[![Version](https://img.shields.io/badge/version-0.1.3-blue.svg)]
+[![Version](https://img.shields.io/badge/version-0.1.4-blue.svg)]
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)]
 
 <!-- NOTE: The dynamic PyPI badges (pypi/v, pypi/pyversions, pypi/dm) will show valid data after the package is published to PyPI under the same name. Currently these are shown as local/static badges to avoid "not found" images. -->
@@ -123,25 +123,17 @@ New helpers
 - Richer argument serialization and PII scrubbing hooks
 - CLI tooling to visualize recent traces locally
 
-## License
-
-Important: do not claim the MIT license unless you include a `LICENSE` file in this repository and you intend to license the project under MIT. I did not add or change a LICENSE file here.
-
-If you want to publish under MIT, add a `LICENSE` file containing the MIT text and then update metadata accordingly. If you need, I can add the MIT file for you.
-
 ## Release / PyPI
 
-If you plan to publish a new release to PyPI, bump the version in `pyproject.toml`, build, and upload.
 
-Typical steps:
+Steps:
 
 ```bash
-# bump version in pyproject.toml (we updated to 0.1.1)
+
 python -m build
 python -m twine upload dist/*
 ```
 
-You will need a PyPI account and `twine` configured with credentials.
 
 ## Changelog
 
@@ -149,9 +141,4 @@ You will need a PyPI account and `twine` configured with credentials.
 - v0.1.2 — Added context helpers, runtime `set_level`, and demo CLI
 - v0.1.3 — Added backend exporter (file), `trace_block`, sampling support, and README beautification
 
----
 
-If you'd like, I can:
-- Add the `LICENSE` file (MIT) and update metadata
-- Commit and tag the release and run the build/upload steps (I can show commands)
-- Implement any suggested feature as a PR
