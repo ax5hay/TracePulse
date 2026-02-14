@@ -32,6 +32,38 @@
         "documentation": {}
     },
     {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "sys",
         "kind": 6,
         "isExtraImport": true,
@@ -83,14 +115,6 @@
         "importPath": "contextvars",
         "description": "contextvars",
         "detail": "contextvars",
-        "documentation": {}
-    },
-    {
-        "label": "logger",
-        "importPath": "typing import Any. Callable. Optional. Dictfrom .logger import loggerfrom typing import Any. Callable. Optional. Dictfrom .logger",
-        "description": "typing import Any. Callable. Optional. Dictfrom .logger import loggerfrom typing import Any. Callable. Optional. Dictfrom .logger",
-        "isExtraImport": true,
-        "detail": "typing import Any. Callable. Optional. Dictfrom .logger import loggerfrom typing import Any. Callable. Optional. Dictfrom .logger",
         "documentation": {}
     },
     {

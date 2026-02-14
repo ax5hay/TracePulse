@@ -3,7 +3,7 @@ import asyncio
 import functools
 import contextvars
 from .logger import logger
-from typing import Any, Callable, Optional, Dictfrom .logger import loggerfrom typing import Any, Callable, Optional, Dictfrom .logger import logger
+from typing import Any, Callable, Optional, Dict
 
 
 _TRACE_CONTEXT: contextvars.ContextVar[Optional[Dict[str, Any]]] = contextvars.ContextVar(
