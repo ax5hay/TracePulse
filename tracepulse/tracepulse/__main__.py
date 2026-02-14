@@ -1,5 +1,5 @@
 import asyncio
-from . import trace, set_context, clear_context
+from . import trace, set_context, clear_contextfrom . import trace, set_context, clear_contextfrom . import trace, set_context, clear_contextfrom . import trace, set_context, clear_context
 
 @trace
 def demo_sync(x):

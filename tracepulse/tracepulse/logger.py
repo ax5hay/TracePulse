@@ -13,8 +13,8 @@ try:
 except Exception:
     _HAS_LOGURU = False
 
-import logging
 import sys
+import logging
 
 
 LOG_DIR = Path("logs")

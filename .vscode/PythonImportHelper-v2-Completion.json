@@ -32,35 +32,12 @@
         "documentation": {}
     },
     {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
+        "label": "sys",
+        "kind": 6,
         "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Callable",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Dict",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
         "documentation": {}
     },
     {
@@ -73,30 +50,12 @@
         "documentation": {}
     },
     {
-        "label": "sys",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "sys",
-        "description": "sys",
-        "detail": "sys",
-        "documentation": {}
-    },
-    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "time",
         "description": "time",
         "detail": "time",
-        "documentation": {}
-    },
-    {
-        "label": "functools",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "functools",
-        "description": "functools",
-        "detail": "functools",
         "documentation": {}
     },
     {
@@ -109,12 +68,29 @@
         "documentation": {}
     },
     {
+        "label": "functools",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "functools",
+        "description": "functools",
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
         "label": "contextvars",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "contextvars",
         "description": "contextvars",
         "detail": "contextvars",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "importPath": "typing import Any. Callable. Optional. Dictfrom .logger import loggerfrom typing import Any. Callable. Optional. Dictfrom .logger",
+        "description": "typing import Any. Callable. Optional. Dictfrom .logger import loggerfrom typing import Any. Callable. Optional. Dictfrom .logger",
+        "isExtraImport": true,
+        "detail": "typing import Any. Callable. Optional. Dictfrom .logger import loggerfrom typing import Any. Callable. Optional. Dictfrom .logger",
         "documentation": {}
     },
     {
