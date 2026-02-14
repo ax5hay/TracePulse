@@ -10,4 +10,7 @@ __all__ = [
 	"set_level",
 	"enable_file_backend",
 	"disable_backend",
+ 	"AsyncFileBackend",
+    "add_backend",
+    "clear_backends"
 ]

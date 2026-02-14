@@ -1,39 +1,21 @@
 [build-system]
-# NOTE: Before building, run: bash ../sync_readme.sh
-# README.md in this dir is auto-synced from ../README.md (repo root is source of truth)
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "tracepulse"
-version = "0.1.7"
+version = "0.2.0"
+description = "Production-grade execution tracing and observability for Sync and Async Python."
 readme = "README.md"
-description = "Execution tracing & performance observability for Python services"
-authors = [{ name = "Akshay Bajpai" }]
 requires-python = ">=3.8"
-dependencies = ["loguru"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries",
+    "Operating System :: OS Independent",
 ]
+dependencies = []
+
+[project.optional-dependencies]
+standard = ["loguru"]
 
 [project.urls]
-Homepage = "https://github.com/ax5hay/TracePulse"
-Repository = "https://github.com/ax5hay/TracePulse"
-Issues = "https://github.com/ax5hay/TracePulse/issues"
-Changelog = "https://github.com/ax5hay/TracePulse/releases"
-
-[tool.setuptools]
-packages = ["tracepulse"]
-
-[tool.setuptools.package-dir]
-"" = "src"
+Homepage = "https://github.com/ax5hay/tracepulse"
