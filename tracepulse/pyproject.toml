@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tracepulse"
-version = "0.1.0"
+version = "0.1.2"
 description = "Execution tracing & performance observability for Python services"
 authors = [{ name="Akshay Bajpai" }]
 readme = "README.md"

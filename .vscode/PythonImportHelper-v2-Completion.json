@@ -1,10 +1,75 @@
 [
     {
-        "label": "logger",
-        "importPath": "loguru",
-        "description": "loguru",
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
         "isExtraImport": true,
-        "detail": "loguru",
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
         "documentation": {}
     },
     {
@@ -14,14 +79,6 @@
         "importPath": "sys",
         "description": "sys",
         "detail": "sys",
-        "documentation": {}
-    },
-    {
-        "label": "Path",
-        "importPath": "pathlib",
-        "description": "pathlib",
-        "isExtraImport": true,
-        "detail": "pathlib",
         "documentation": {}
     },
     {
@@ -52,12 +109,48 @@
         "documentation": {}
     },
     {
+        "label": "contextvars",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "contextvars",
+        "description": "contextvars",
+        "detail": "contextvars",
+        "documentation": {}
+    },
+    {
         "label": "LOG_DIR",
         "kind": 5,
         "importPath": "tracepulse.tracepulse.logger",
         "description": "tracepulse.tracepulse.logger",
-        "peekOfCode": "LOG_DIR = Path(\"logs\")\nLOG_DIR.mkdir(exist_ok=True)\nlogger.remove()\nlogger.add(\n    sys.stdout,\n    format=(\n        \"<green>{time:YYYY-MM-DD HH:mm:ss}</green> | \"\n        \"<level>{level}</level> | \"\n        \"{extra} | \"\n        \"{message}\"",
+        "peekOfCode": "LOG_DIR = Path(\"logs\")\nLOG_DIR.mkdir(exist_ok=True)\nif _HAS_LOGURU:\n    # Keep track of the stdout sink so we can reconfigure level at runtime\n    _STDOUT_SINK_ID: Optional[int] = None\n    def _setup_logger(level: str = \"INFO\") -> None:\n        global _STDOUT_SINK_ID\n        logger.remove()\n        _STDOUT_SINK_ID = logger.add(\n            sys.stdout,",
         "detail": "tracepulse.tracepulse.logger",
+        "documentation": {}
+    },
+    {
+        "label": "__all__",
+        "kind": 5,
+        "importPath": "tracepulse.tracepulse.logger",
+        "description": "tracepulse.tracepulse.logger",
+        "peekOfCode": "__all__ = [\"logger\", \"set_level\", \"LOG_DIR\"]",
+        "detail": "tracepulse.tracepulse.logger",
+        "documentation": {}
+    },
+    {
+        "label": "set_context",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.tracer",
+        "description": "tracepulse.tracepulse.tracer",
+        "peekOfCode": "def set_context(tags: Dict[str, Any]):\n    \"\"\"Set a trace context (returns a token for later reset).\"\"\"\n    return _TRACE_CONTEXT.set(tags)\ndef clear_context(token=None):\n    \"\"\"Clear or reset the trace context. If `token` provided, resets to previous.\"\"\"\n    if token is not None:\n        _TRACE_CONTEXT.reset(token)\n    else:\n        _TRACE_CONTEXT.set(None)\ndef _get_context() -> Dict[str, Any]:",
+        "detail": "tracepulse.tracepulse.tracer",
+        "documentation": {}
+    },
+    {
+        "label": "clear_context",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.tracer",
+        "description": "tracepulse.tracepulse.tracer",
+        "peekOfCode": "def clear_context(token=None):\n    \"\"\"Clear or reset the trace context. If `token` provided, resets to previous.\"\"\"\n    if token is not None:\n        _TRACE_CONTEXT.reset(token)\n    else:\n        _TRACE_CONTEXT.set(None)\ndef _get_context() -> Dict[str, Any]:\n    v = _TRACE_CONTEXT.get()\n    return v.copy() if isinstance(v, dict) else {}\ndef trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None):",
+        "detail": "tracepulse.tracepulse.tracer",
         "documentation": {}
     },
     {
@@ -65,7 +158,7 @@
         "kind": 2,
         "importPath": "tracepulse.tracepulse.tracer",
         "description": "tracepulse.tracepulse.tracer",
-        "peekOfCode": "def trace(fn):\n    \"\"\"\n    Execution tracing decorator supporting sync and async functions.\n    Captures runtime duration, structured logs, and failure telemetry.\n    \"\"\"\n    if asyncio.iscoroutinefunction(fn):\n        @functools.wraps(fn)\n        async def async_wrapper(*args, **kwargs):\n            start = time.perf_counter()\n            fn_name = fn.__name__",
+        "peekOfCode": "def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None):\n    \"\"\"Decorator to trace sync and async callables.\n    Can be used as `@trace` or `@trace(capture_args=True, tags={...})`.\n    \"\"\"\n    def decorator(fn: Callable):\n        if asyncio.iscoroutinefunction(fn):\n            @functools.wraps(fn)\n            async def async_wrapper(*args, **kwargs):\n                start = time.perf_counter()\n                fn_name = fn.__name__",
         "detail": "tracepulse.tracepulse.tracer",
         "documentation": {}
     }

@@ -1,83 +1,120 @@
 import time
 import functools
 import asyncio
+import contextvars
+from typing import Any, Callable, Optional, Dict
 from .logger import logger
 
 
-def trace(fn):
-    """
-    Execution tracing decorator supporting sync and async functions.
-    Captures runtime duration, structured logs, and failure telemetry.
-    """
+_TRACE_CONTEXT: contextvars.ContextVar[Optional[Dict[str, Any]]] = contextvars.ContextVar(
+    "tracepulse.context", default=None
+)
 
-    if asyncio.iscoroutinefunction(fn):
 
-        @functools.wraps(fn)
-        async def async_wrapper(*args, **kwargs):
+def set_context(tags: Dict[str, Any]):
+    """Set a trace context (returns a token for later reset)."""
+    return _TRACE_CONTEXT.set(tags)
 
-            start = time.perf_counter()
-            fn_name = fn.__name__
 
-            logger.bind(function=fn_name).info("Execution started")
-
-            try:
-                result = await fn(*args, **kwargs)
-
-                duration = (time.perf_counter() - start) * 1000
-
-                logger.bind(
-                    function=fn_name,
-                    duration_ms=round(duration, 2)
-                ).success("Execution completed")
-
-                return result
-
-            except Exception as e:
-
-                duration = (time.perf_counter() - start) * 1000
-
-                logger.bind(
-                    function=fn_name,
-                    duration_ms=round(duration, 2),
-                    error=str(e)
-                ).error("Execution failed")
-
-                raise
-
-        return async_wrapper
-
+def clear_context(token=None):
+    """Clear or reset the trace context. If `token` provided, resets to previous."""
+    if token is not None:
+        _TRACE_CONTEXT.reset(token)
     else:
+        _TRACE_CONTEXT.set(None)
 
-        @functools.wraps(fn)
-        def sync_wrapper(*args, **kwargs):
 
-            start = time.perf_counter()
-            fn_name = fn.__name__
+def _get_context() -> Dict[str, Any]:
+    v = _TRACE_CONTEXT.get()
+    return v.copy() if isinstance(v, dict) else {}
 
-            logger.bind(function=fn_name).info("Execution started")
 
-            try:
-                result = fn(*args, **kwargs)
+def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None):
+    """Decorator to trace sync and async callables.
 
-                duration = (time.perf_counter() - start) * 1000
+    Can be used as `@trace` or `@trace(capture_args=True, tags={...})`.
+    """
 
-                logger.bind(
-                    function=fn_name,
-                    duration_ms=round(duration, 2)
-                ).success("Execution completed")
+    def decorator(fn: Callable):
+        if asyncio.iscoroutinefunction(fn):
 
-                return result
+            @functools.wraps(fn)
+            async def async_wrapper(*args, **kwargs):
+                start = time.perf_counter()
+                fn_name = fn.__name__
 
-            except Exception as e:
+                extra = _get_context()
+                if tags:
+                    extra.update(tags)
 
-                duration = (time.perf_counter() - start) * 1000
+                if capture_args:
+                    try:
+                        extra["args"] = str(args)[:200]
+                        extra["kwargs"] = str(kwargs)[:200]
+                    except Exception:
+                        extra["args"] = "<unserializable>"
 
-                logger.bind(
-                    function=fn_name,
-                    duration_ms=round(duration, 2),
-                    error=str(e)
-                ).error("Execution failed")
+                logger.bind(function=fn_name, **extra).info("Execution started")
 
-                raise
+                try:
+                    result = await fn(*args, **kwargs)
 
-        return sync_wrapper
+                    duration = (time.perf_counter() - start) * 1000
+                    extra["duration_ms"] = round(duration, 2)
+
+                    logger.bind(function=fn_name, **extra).success("Execution completed")
+                    return result
+
+                except Exception as e:
+                    duration = (time.perf_counter() - start) * 1000
+                    extra["duration_ms"] = round(duration, 2)
+                    extra["error"] = str(e)
+
+                    logger.bind(function=fn_name, **extra).error("Execution failed")
+                    raise
+
+            return async_wrapper
+
+        else:
+
+            @functools.wraps(fn)
+            def sync_wrapper(*args, **kwargs):
+                start = time.perf_counter()
+                fn_name = fn.__name__
+
+                extra = _get_context()
+                if tags:
+                    extra.update(tags)
+
+                if capture_args:
+                    try:
+                        extra["args"] = str(args)[:200]
+                        extra["kwargs"] = str(kwargs)[:200]
+                    except Exception:
+                        extra["args"] = "<unserializable>"
+
+                logger.bind(function=fn_name, **extra).info("Execution started")
+
+                try:
+                    result = fn(*args, **kwargs)
+
+                    duration = (time.perf_counter() - start) * 1000
+                    extra["duration_ms"] = round(duration, 2)
+
+                    logger.bind(function=fn_name, **extra).success("Execution completed")
+                    return result
+
+                except Exception as e:
+                    duration = (time.perf_counter() - start) * 1000
+                    extra["duration_ms"] = round(duration, 2)
+                    extra["error"] = str(e)
+
+                    logger.bind(function=fn_name, **extra).error("Execution failed")
+                    raise
+
+            return sync_wrapper
+
+    # Support both @trace and @trace(...)
+    if callable(_fn):
+        return decorator(_fn)
+    return decorator
