@@ -1,4 +1,6 @@
 [build-system]
+# NOTE: Before building, run: bash ../sync_readme.sh
+# README.md in this dir is auto-synced from ../README.md (repo root is source of truth)
 requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 

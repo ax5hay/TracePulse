@@ -1,0 +1,49 @@
+# NOTE: README.md is the primary source of truth for the project
+# It is auto-synced to tracepulse/README.md for PyPI distribution
+# Use sync_readme.sh to update package README before building
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.code-workspace
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# OS and logs
+logs/
+*.log
+
+# Git and version control
+.git/
+
+# Other
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
