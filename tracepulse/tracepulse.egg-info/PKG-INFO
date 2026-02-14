@@ -12,9 +12,10 @@ Dynamic: license-file
 
 # Tracepulse
 
-[![PyPI version](https://img.shields.io/pypi/v/tracepulse)](https://pypi.org/project/tracepulse)
-[![Python versions](https://img.shields.io/pypi/pyversions/tracepulse)](https://pypi.org/project/tracepulse)
-[![Downloads](https://img.shields.io/pypi/dm/tracepulse)](https://pypi.org/project/tracepulse)
+[![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)]
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)]
+
+<!-- NOTE: The dynamic PyPI badges (pypi/v, pypi/pyversions, pypi/dm) will show valid data after the package is published to PyPI under the same name. Currently these are shown as local/static badges to avoid "not found" images. -->
 
 Lightweight execution tracing and performance observability for synchronous and asynchronous Python code.
 
@@ -49,9 +50,10 @@ Tracepulse provides a simple decorator-based tracer that records function start/
 
 ## Quickstart
 
-Install from PyPI:
+Install (from PyPI after publishing):
 
 ```bash
+# once published to PyPI
 pip install tracepulse
 ```
 
