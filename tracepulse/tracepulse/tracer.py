@@ -1,8 +1,11 @@
 import time
+import random
 import asyncio
 import functools
 import contextvars
+from . import backends
 from .logger import logger
+from contextlib import contextmanager
 from typing import Any, Callable, Optional, Dict
 
 
@@ -29,7 +32,7 @@ def _get_context() -> Dict[str, Any]:
     return v.copy() if isinstance(v, dict) else {}
 
 
-def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None):
+def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):
     """Decorator to trace sync and async callables.
 
     Can be used as `@trace` or `@trace(capture_args=True, tags={...})`.
@@ -42,6 +45,8 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
             async def async_wrapper(*args, **kwargs):
                 start = time.perf_counter()
                 fn_name = fn.__name__
+                # decide whether to record this invocation (sampling)
+                should_record = float(sample_rate) >= 1.0 or random.random() < float(sample_rate)
 
                 extra = _get_context()
                 if tags:
@@ -54,7 +59,8 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                     except Exception:
                         extra["args"] = "<unserializable>"
 
-                logger.bind(function=fn_name, **extra).info("Execution started")
+                if should_record:
+                    logger.bind(function=fn_name, **extra).info("Execution started")
 
                 try:
                     result = await fn(*args, **kwargs)
@@ -62,7 +68,19 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                     duration = (time.perf_counter() - start) * 1000
                     extra["duration_ms"] = round(duration, 2)
 
-                    logger.bind(function=fn_name, **extra).success("Execution completed")
+                    if should_record:
+                        logger.bind(function=fn_name, **extra).success("Execution completed")
+                    # Export to backend if configured
+                    try:
+                        backends.export({
+                            "function": fn_name,
+                            **extra,
+                            "duration_ms": extra.get("duration_ms"),
+                            "status": "ok",
+                            "ts": time.time(),
+                        })
+                    except Exception:
+                        pass
                     return result
 
                 except Exception as e:
@@ -71,6 +89,16 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                     extra["error"] = str(e)
 
                     logger.bind(function=fn_name, **extra).error("Execution failed")
+                    if should_record:
+                        try:
+                            backends.export({
+                                "function": fn_name,
+                                **extra,
+                                "status": "error",
+                                "ts": time.time(),
+                            })
+                        except Exception:
+                            pass
                     raise
 
             return async_wrapper
@@ -82,6 +110,8 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                 start = time.perf_counter()
                 fn_name = fn.__name__
 
+                should_record = float(sample_rate) >= 1.0 or random.random() < float(sample_rate)
+
                 extra = _get_context()
                 if tags:
                     extra.update(tags)
@@ -93,7 +123,8 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                     except Exception:
                         extra["args"] = "<unserializable>"
 
-                logger.bind(function=fn_name, **extra).info("Execution started")
+                if should_record:
+                    logger.bind(function=fn_name, **extra).info("Execution started")
 
                 try:
                     result = fn(*args, **kwargs)
@@ -101,7 +132,18 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                     duration = (time.perf_counter() - start) * 1000
                     extra["duration_ms"] = round(duration, 2)
 
-                    logger.bind(function=fn_name, **extra).success("Execution completed")
+                    if should_record:
+                        logger.bind(function=fn_name, **extra).success("Execution completed")
+                        try:
+                            backends.export({
+                                "function": fn_name,
+                                **extra,
+                                "duration_ms": extra.get("duration_ms"),
+                                "status": "ok",
+                                "ts": time.time(),
+                            })
+                        except Exception:
+                            pass
                     return result
 
                 except Exception as e:
@@ -109,7 +151,17 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
                     extra["duration_ms"] = round(duration, 2)
                     extra["error"] = str(e)
 
-                    logger.bind(function=fn_name, **extra).error("Execution failed")
+                    if should_record:
+                        logger.bind(function=fn_name, **extra).error("Execution failed")
+                        try:
+                            backends.export({
+                                "function": fn_name,
+                                **extra,
+                                "status": "error",
+                                "ts": time.time(),
+                            })
+                        except Exception:
+                            pass
                     raise
 
             return sync_wrapper
@@ -118,3 +170,44 @@ def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: O
     if callable(_fn):
         return decorator(_fn)
     return decorator
+
+
+@contextmanager
+def trace_block(name: str, *, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):
+    """Context manager for tracing an arbitrary code block.
+
+    Example:
+
+        with trace_block("startup", tags={"phase":"init"}):
+            do_startup()
+
+    """
+    start = time.perf_counter()
+    extra = _get_context()
+    if tags:
+        extra.update(tags)
+
+    should_record = float(sample_rate) >= 1.0 or random.random() < float(sample_rate)
+    if should_record:
+        logger.bind(function=name, **extra).info("Block started")
+    try:
+        yield
+        duration = (time.perf_counter() - start) * 1000
+        extra["duration_ms"] = round(duration, 2)
+        if should_record:
+            logger.bind(function=name, **extra).success("Block completed")
+            try:
+                backends.export({"function": name, **extra, "status": "ok", "ts": time.time()})
+            except Exception:
+                pass
+    except Exception as e:
+        duration = (time.perf_counter() - start) * 1000
+        extra["duration_ms"] = round(duration, 2)
+        extra["error"] = str(e)
+        if should_record:
+            logger.bind(function=name, **extra).error("Block failed")
+            try:
+                backends.export({"function": name, **extra, "status": "error", "ts": time.time()})
+            except Exception:
+                pass
+        raise

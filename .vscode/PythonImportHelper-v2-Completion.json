@@ -1,10 +1,67 @@
 [
     {
+        "label": "annotations",
+        "importPath": "__future__",
+        "description": "__future__",
+        "isExtraImport": true,
+        "detail": "__future__",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
         "label": "Path",
         "importPath": "pathlib",
         "description": "pathlib",
         "isExtraImport": true,
         "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Lock",
+        "importPath": "threading",
+        "description": "threading",
+        "isExtraImport": true,
+        "detail": "threading",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
         "documentation": {}
     },
     {
@@ -91,6 +148,15 @@
         "documentation": {}
     },
     {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
         "label": "asyncio",
         "kind": 6,
         "isExtraImport": true,
@@ -115,6 +181,50 @@
         "importPath": "contextvars",
         "description": "contextvars",
         "detail": "contextvars",
+        "documentation": {}
+    },
+    {
+        "label": "contextmanager",
+        "importPath": "contextlib",
+        "description": "contextlib",
+        "isExtraImport": true,
+        "detail": "contextlib",
+        "documentation": {}
+    },
+    {
+        "label": "enable_file_backend",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.backends",
+        "description": "tracepulse.tracepulse.backends",
+        "peekOfCode": "def enable_file_backend(path: str) -> None:\n    \"\"\"Enable writing trace events to a newline-delimited JSON file.\"\"\"\n    global _file_path\n    p = Path(path)\n    p.parent.mkdir(parents=True, exist_ok=True)\n    _file_path = p\ndef disable_backend() -> None:\n    global _file_path\n    _file_path = None\ndef _write_event(event: Dict[str, Any]) -> None:",
+        "detail": "tracepulse.tracepulse.backends",
+        "documentation": {}
+    },
+    {
+        "label": "disable_backend",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.backends",
+        "description": "tracepulse.tracepulse.backends",
+        "peekOfCode": "def disable_backend() -> None:\n    global _file_path\n    _file_path = None\ndef _write_event(event: Dict[str, Any]) -> None:\n    if _file_path is None:\n        return\n    s = json.dumps(event, default=str, separators=(',', ':'))\n    with _lock:\n        with _file_path.open('a', encoding='utf-8') as fh:\n            fh.write(s + \"\\n\")",
+        "detail": "tracepulse.tracepulse.backends",
+        "documentation": {}
+    },
+    {
+        "label": "export",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.backends",
+        "description": "tracepulse.tracepulse.backends",
+        "peekOfCode": "def export(event: Dict[str, Any]) -> None:\n    \"\"\"Export a single trace event to the enabled backend(s).\"\"\"\n    _write_event(event)",
+        "detail": "tracepulse.tracepulse.backends",
+        "documentation": {}
+    },
+    {
+        "label": "_lock",
+        "kind": 5,
+        "importPath": "tracepulse.tracepulse.backends",
+        "description": "tracepulse.tracepulse.backends",
+        "peekOfCode": "_lock = Lock()\ndef enable_file_backend(path: str) -> None:\n    \"\"\"Enable writing trace events to a newline-delimited JSON file.\"\"\"\n    global _file_path\n    p = Path(path)\n    p.parent.mkdir(parents=True, exist_ok=True)\n    _file_path = p\ndef disable_backend() -> None:\n    global _file_path\n    _file_path = None",
+        "detail": "tracepulse.tracepulse.backends",
         "documentation": {}
     },
     {
@@ -149,7 +259,7 @@
         "kind": 2,
         "importPath": "tracepulse.tracepulse.tracer",
         "description": "tracepulse.tracepulse.tracer",
-        "peekOfCode": "def clear_context(token=None):\n    \"\"\"Clear or reset the trace context. If `token` provided, resets to previous.\"\"\"\n    if token is not None:\n        _TRACE_CONTEXT.reset(token)\n    else:\n        _TRACE_CONTEXT.set(None)\ndef _get_context() -> Dict[str, Any]:\n    v = _TRACE_CONTEXT.get()\n    return v.copy() if isinstance(v, dict) else {}\ndef trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None):",
+        "peekOfCode": "def clear_context(token=None):\n    \"\"\"Clear or reset the trace context. If `token` provided, resets to previous.\"\"\"\n    if token is not None:\n        _TRACE_CONTEXT.reset(token)\n    else:\n        _TRACE_CONTEXT.set(None)\ndef _get_context() -> Dict[str, Any]:\n    v = _TRACE_CONTEXT.get()\n    return v.copy() if isinstance(v, dict) else {}\ndef trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):",
         "detail": "tracepulse.tracepulse.tracer",
         "documentation": {}
     },
@@ -158,7 +268,16 @@
         "kind": 2,
         "importPath": "tracepulse.tracepulse.tracer",
         "description": "tracepulse.tracepulse.tracer",
-        "peekOfCode": "def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None):\n    \"\"\"Decorator to trace sync and async callables.\n    Can be used as `@trace` or `@trace(capture_args=True, tags={...})`.\n    \"\"\"\n    def decorator(fn: Callable):\n        if asyncio.iscoroutinefunction(fn):\n            @functools.wraps(fn)\n            async def async_wrapper(*args, **kwargs):\n                start = time.perf_counter()\n                fn_name = fn.__name__",
+        "peekOfCode": "def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):\n    \"\"\"Decorator to trace sync and async callables.\n    Can be used as `@trace` or `@trace(capture_args=True, tags={...})`.\n    \"\"\"\n    def decorator(fn: Callable):\n        if asyncio.iscoroutinefunction(fn):\n            @functools.wraps(fn)\n            async def async_wrapper(*args, **kwargs):\n                start = time.perf_counter()\n                fn_name = fn.__name__",
+        "detail": "tracepulse.tracepulse.tracer",
+        "documentation": {}
+    },
+    {
+        "label": "trace_block",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.tracer",
+        "description": "tracepulse.tracepulse.tracer",
+        "peekOfCode": "def trace_block(name: str, *, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):\n    \"\"\"Context manager for tracing an arbitrary code block.\n    Example:\n        with trace_block(\"startup\", tags={\"phase\":\"init\"}):\n            do_startup()\n    \"\"\"\n    start = time.perf_counter()\n    extra = _get_context()\n    if tags:\n        extra.update(tags)",
         "detail": "tracepulse.tracepulse.tracer",
         "documentation": {}
     }

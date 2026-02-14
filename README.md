@@ -1,6 +1,6 @@
 # Tracepulse
 
-[![Version](https://img.shields.io/badge/version-0.1.2-blue.svg)]
+[![Version](https://img.shields.io/badge/version-0.1.3-blue.svg)]
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)]
 
 <!-- NOTE: The dynamic PyPI badges (pypi/v, pypi/pyversions, pypi/dm) will show valid data after the package is published to PyPI under the same name. Currently these are shown as local/static badges to avoid "not found" images. -->
@@ -104,6 +104,12 @@ clear_context(token)  # reset
 
 These helpers let you add lightweight, application-level context to trace events without a heavy propagation system.
 
+New helpers
+
+- `enable_file_backend(path)` — write trace events as newline-delimited JSON to `path`.
+- `trace_block(name, tags=None, sample_rate=1.0)` — context manager for tracing arbitrary code blocks.
+- `trace(..., sample_rate=0.1)` — decorator now supports sampling via `sample_rate` (0.0-1.0).
+
 ## Advanced
 
 - Logging: Tracepulse uses `loguru` internally by default; if `loguru` is not installed the package falls back to the stdlib `logging` module so basic demos and imports still work.
@@ -141,6 +147,7 @@ You will need a PyPI account and `twine` configured with credentials.
 
 - v0.1.1 — Documentation improvements, README refresh, version bump
 - v0.1.2 — Added context helpers, runtime `set_level`, and demo CLI
+- v0.1.3 — Added backend exporter (file), `trace_block`, sampling support, and README beautification
 
 ---
 
