@@ -9,13 +9,11 @@ name = "tracepulse"
 version = "0.1.5"
 description = "Execution tracing & performance observability for Python services"
 authors = [{ name = "Akshay Bajpai" }]
-readme = "README.md"
 requires-python = ">=3.8"
 dependencies = ["loguru"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
