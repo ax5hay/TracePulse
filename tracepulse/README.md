@@ -1,6 +1,6 @@
 # Tracepulse
 
-[![Version](https://img.shields.io/badge/version-0.1.5-blue.svg)]
+[![Version](https://img.shields.io/badge/version-0.1.6-blue.svg)]
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)]
 
 <!-- NOTE: The dynamic PyPI badges (pypi/v, pypi/pyversions, pypi/dm) will show valid data after the package is published to PyPI under the same name. Currently these are shown as local/static badges to avoid "not found" images. -->
