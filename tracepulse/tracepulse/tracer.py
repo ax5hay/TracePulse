@@ -1,29 +1,24 @@
 import time
-import uuid
-import asyncio
 import functools
+import asyncio
 from .logger import logger
 
 
-CALL_STACK = []
-
-
 def trace(fn):
+    """
+    Execution tracing decorator supporting sync and async functions.
+    Captures runtime duration, structured logs, and failure telemetry.
+    """
 
     if asyncio.iscoroutinefunction(fn):
 
         @functools.wraps(fn)
         async def async_wrapper(*args, **kwargs):
 
-            trace_id = str(uuid.uuid4())[:8]
             start = time.perf_counter()
+            fn_name = fn.__name__
 
-            CALL_STACK.append(fn.__name__)
-
-            logger.bind(
-                trace_id=trace_id,
-                depth=len(CALL_STACK)
-            ).info(f"{fn.__name__} started")
+            logger.bind(function=fn_name).info("Execution started")
 
             try:
                 result = await fn(*args, **kwargs)
@@ -31,23 +26,23 @@ def trace(fn):
                 duration = (time.perf_counter() - start) * 1000
 
                 logger.bind(
-                    trace_id=trace_id,
+                    function=fn_name,
                     duration_ms=round(duration, 2)
-                ).success(f"{fn.__name__} completed")
+                ).success("Execution completed")
 
                 return result
 
             except Exception as e:
 
+                duration = (time.perf_counter() - start) * 1000
+
                 logger.bind(
-                    trace_id=trace_id,
+                    function=fn_name,
+                    duration_ms=round(duration, 2),
                     error=str(e)
-                ).error(f"{fn.__name__} failed")
+                ).error("Execution failed")
 
                 raise
-
-            finally:
-                CALL_STACK.pop()
 
         return async_wrapper
 
@@ -56,15 +51,10 @@ def trace(fn):
         @functools.wraps(fn)
         def sync_wrapper(*args, **kwargs):
 
-            trace_id = str(uuid.uuid4())[:8]
             start = time.perf_counter()
+            fn_name = fn.__name__
 
-            CALL_STACK.append(fn.__name__)
-
-            logger.bind(
-                trace_id=trace_id,
-                depth=len(CALL_STACK)
-            ).info(f"{fn.__name__} started")
+            logger.bind(function=fn_name).info("Execution started")
 
             try:
                 result = fn(*args, **kwargs)
@@ -72,22 +62,22 @@ def trace(fn):
                 duration = (time.perf_counter() - start) * 1000
 
                 logger.bind(
-                    trace_id=trace_id,
+                    function=fn_name,
                     duration_ms=round(duration, 2)
-                ).success(f"{fn.__name__} completed")
+                ).success("Execution completed")
 
                 return result
 
             except Exception as e:
 
+                duration = (time.perf_counter() - start) * 1000
+
                 logger.bind(
-                    trace_id=trace_id,
+                    function=fn_name,
+                    duration_ms=round(duration, 2),
                     error=str(e)
-                ).error(f"{fn.__name__} failed")
+                ).error("Execution failed")
 
                 raise
-
-            finally:
-                CALL_STACK.pop()
 
         return sync_wrapper

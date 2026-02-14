@@ -1,0 +1,72 @@
+[
+    {
+        "label": "logger",
+        "importPath": "loguru",
+        "description": "loguru",
+        "isExtraImport": true,
+        "detail": "loguru",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "functools",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "functools",
+        "description": "functools",
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "LOG_DIR",
+        "kind": 5,
+        "importPath": "tracepulse.tracepulse.logger",
+        "description": "tracepulse.tracepulse.logger",
+        "peekOfCode": "LOG_DIR = Path(\"logs\")\nLOG_DIR.mkdir(exist_ok=True)\nlogger.remove()\nlogger.add(\n    sys.stdout,\n    format=(\n        \"<green>{time:YYYY-MM-DD HH:mm:ss}</green> | \"\n        \"<level>{level}</level> | \"\n        \"{extra} | \"\n        \"{message}\"",
+        "detail": "tracepulse.tracepulse.logger",
+        "documentation": {}
+    },
+    {
+        "label": "trace",
+        "kind": 2,
+        "importPath": "tracepulse.tracepulse.tracer",
+        "description": "tracepulse.tracepulse.tracer",
+        "peekOfCode": "def trace(fn):\n    \"\"\"\n    Execution tracing decorator supporting sync and async functions.\n    Captures runtime duration, structured logs, and failure telemetry.\n    \"\"\"\n    if asyncio.iscoroutinefunction(fn):\n        @functools.wraps(fn)\n        async def async_wrapper(*args, **kwargs):\n            start = time.perf_counter()\n            fn_name = fn.__name__",
+        "detail": "tracepulse.tracepulse.tracer",
+        "documentation": {}
+    }
+]

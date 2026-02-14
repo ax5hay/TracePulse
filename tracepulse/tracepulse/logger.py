@@ -1,6 +1,6 @@
+from loguru import logger
 import sys
 from pathlib import Path
-from loguru import logger
 
 
 LOG_DIR = Path("logs")
@@ -12,16 +12,18 @@ logger.remove()
 logger.add(
     sys.stdout,
     format=(
-        "<green>{time:HH:mm:ss}</green> | "
+        "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
         "<level>{level}</level> | "
-        "trace={extra[trace_id]} | "
+        "{extra} | "
         "{message}"
     ),
     level="INFO"
 )
 
 logger.add(
-    LOG_DIR / "tracepulse.json",
-    serialize=True,
-    rotation="10 MB"
+    LOG_DIR / "tracepulse.log",
+    rotation="10 MB",
+    retention="7 days",
+    compression="zip",
+    serialize=True
 )
