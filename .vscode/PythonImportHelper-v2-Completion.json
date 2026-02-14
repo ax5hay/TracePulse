@@ -192,93 +192,170 @@
         "documentation": {}
     },
     {
+        "label": "trace",
+        "importPath": "tracepulse",
+        "description": "tracepulse",
+        "isExtraImport": true,
+        "detail": "tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "trace_block",
+        "importPath": "tracepulse",
+        "description": "tracepulse",
+        "isExtraImport": true,
+        "detail": "tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "set_context",
+        "importPath": "tracepulse",
+        "description": "tracepulse",
+        "isExtraImport": true,
+        "detail": "tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "clear_context",
+        "importPath": "tracepulse",
+        "description": "tracepulse",
+        "isExtraImport": true,
+        "detail": "tracepulse",
+        "documentation": {}
+    },
+    {
         "label": "enable_file_backend",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.backends",
-        "description": "tracepulse.tracepulse.backends",
+        "importPath": "tracepulse.src.tracepulse.backends",
+        "description": "tracepulse.src.tracepulse.backends",
         "peekOfCode": "def enable_file_backend(path: str) -> None:\n    \"\"\"Enable writing trace events to a newline-delimited JSON file.\"\"\"\n    global _file_path\n    p = Path(path)\n    p.parent.mkdir(parents=True, exist_ok=True)\n    _file_path = p\ndef disable_backend() -> None:\n    global _file_path\n    _file_path = None\ndef _write_event(event: Dict[str, Any]) -> None:",
-        "detail": "tracepulse.tracepulse.backends",
+        "detail": "tracepulse.src.tracepulse.backends",
         "documentation": {}
     },
     {
         "label": "disable_backend",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.backends",
-        "description": "tracepulse.tracepulse.backends",
+        "importPath": "tracepulse.src.tracepulse.backends",
+        "description": "tracepulse.src.tracepulse.backends",
         "peekOfCode": "def disable_backend() -> None:\n    global _file_path\n    _file_path = None\ndef _write_event(event: Dict[str, Any]) -> None:\n    if _file_path is None:\n        return\n    s = json.dumps(event, default=str, separators=(',', ':'))\n    with _lock:\n        with _file_path.open('a', encoding='utf-8') as fh:\n            fh.write(s + \"\\n\")",
-        "detail": "tracepulse.tracepulse.backends",
+        "detail": "tracepulse.src.tracepulse.backends",
         "documentation": {}
     },
     {
         "label": "export",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.backends",
-        "description": "tracepulse.tracepulse.backends",
+        "importPath": "tracepulse.src.tracepulse.backends",
+        "description": "tracepulse.src.tracepulse.backends",
         "peekOfCode": "def export(event: Dict[str, Any]) -> None:\n    \"\"\"Export a single trace event to the enabled backend(s).\"\"\"\n    _write_event(event)",
-        "detail": "tracepulse.tracepulse.backends",
+        "detail": "tracepulse.src.tracepulse.backends",
         "documentation": {}
     },
     {
         "label": "_lock",
         "kind": 5,
-        "importPath": "tracepulse.tracepulse.backends",
-        "description": "tracepulse.tracepulse.backends",
+        "importPath": "tracepulse.src.tracepulse.backends",
+        "description": "tracepulse.src.tracepulse.backends",
         "peekOfCode": "_lock = Lock()\ndef enable_file_backend(path: str) -> None:\n    \"\"\"Enable writing trace events to a newline-delimited JSON file.\"\"\"\n    global _file_path\n    p = Path(path)\n    p.parent.mkdir(parents=True, exist_ok=True)\n    _file_path = p\ndef disable_backend() -> None:\n    global _file_path\n    _file_path = None",
-        "detail": "tracepulse.tracepulse.backends",
+        "detail": "tracepulse.src.tracepulse.backends",
         "documentation": {}
     },
     {
         "label": "LOG_DIR",
         "kind": 5,
-        "importPath": "tracepulse.tracepulse.logger",
-        "description": "tracepulse.tracepulse.logger",
+        "importPath": "tracepulse.src.tracepulse.logger",
+        "description": "tracepulse.src.tracepulse.logger",
         "peekOfCode": "LOG_DIR = Path(\"logs\")\nLOG_DIR.mkdir(exist_ok=True)\nif _HAS_LOGURU:\n    # Keep track of the stdout sink so we can reconfigure level at runtime\n    _STDOUT_SINK_ID: Optional[int] = None\n    def _setup_logger(level: str = \"INFO\") -> None:\n        global _STDOUT_SINK_ID\n        logger.remove()\n        _STDOUT_SINK_ID = logger.add(\n            sys.stdout,",
-        "detail": "tracepulse.tracepulse.logger",
+        "detail": "tracepulse.src.tracepulse.logger",
         "documentation": {}
     },
     {
         "label": "__all__",
         "kind": 5,
-        "importPath": "tracepulse.tracepulse.logger",
-        "description": "tracepulse.tracepulse.logger",
+        "importPath": "tracepulse.src.tracepulse.logger",
+        "description": "tracepulse.src.tracepulse.logger",
         "peekOfCode": "__all__ = [\"logger\", \"set_level\", \"LOG_DIR\"]",
-        "detail": "tracepulse.tracepulse.logger",
+        "detail": "tracepulse.src.tracepulse.logger",
         "documentation": {}
     },
     {
         "label": "set_context",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.tracer",
-        "description": "tracepulse.tracepulse.tracer",
+        "importPath": "tracepulse.src.tracepulse.tracer",
+        "description": "tracepulse.src.tracepulse.tracer",
         "peekOfCode": "def set_context(tags: Dict[str, Any]):\n    \"\"\"Set a trace context (returns a token for later reset).\"\"\"\n    return _TRACE_CONTEXT.set(tags)\ndef clear_context(token=None):\n    \"\"\"Clear or reset the trace context. If `token` provided, resets to previous.\"\"\"\n    if token is not None:\n        _TRACE_CONTEXT.reset(token)\n    else:\n        _TRACE_CONTEXT.set(None)\ndef _get_context() -> Dict[str, Any]:",
-        "detail": "tracepulse.tracepulse.tracer",
+        "detail": "tracepulse.src.tracepulse.tracer",
         "documentation": {}
     },
     {
         "label": "clear_context",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.tracer",
-        "description": "tracepulse.tracepulse.tracer",
+        "importPath": "tracepulse.src.tracepulse.tracer",
+        "description": "tracepulse.src.tracepulse.tracer",
         "peekOfCode": "def clear_context(token=None):\n    \"\"\"Clear or reset the trace context. If `token` provided, resets to previous.\"\"\"\n    if token is not None:\n        _TRACE_CONTEXT.reset(token)\n    else:\n        _TRACE_CONTEXT.set(None)\ndef _get_context() -> Dict[str, Any]:\n    v = _TRACE_CONTEXT.get()\n    return v.copy() if isinstance(v, dict) else {}\ndef trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):",
-        "detail": "tracepulse.tracepulse.tracer",
+        "detail": "tracepulse.src.tracepulse.tracer",
         "documentation": {}
     },
     {
         "label": "trace",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.tracer",
-        "description": "tracepulse.tracepulse.tracer",
+        "importPath": "tracepulse.src.tracepulse.tracer",
+        "description": "tracepulse.src.tracepulse.tracer",
         "peekOfCode": "def trace(_fn: Optional[Callable] = None, *, capture_args: bool = False, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):\n    \"\"\"Decorator to trace sync and async callables.\n    Can be used as `@trace` or `@trace(capture_args=True, tags={...})`.\n    \"\"\"\n    def decorator(fn: Callable):\n        if asyncio.iscoroutinefunction(fn):\n            @functools.wraps(fn)\n            async def async_wrapper(*args, **kwargs):\n                start = time.perf_counter()\n                fn_name = fn.__name__",
-        "detail": "tracepulse.tracepulse.tracer",
+        "detail": "tracepulse.src.tracepulse.tracer",
         "documentation": {}
     },
     {
         "label": "trace_block",
         "kind": 2,
-        "importPath": "tracepulse.tracepulse.tracer",
-        "description": "tracepulse.tracepulse.tracer",
+        "importPath": "tracepulse.src.tracepulse.tracer",
+        "description": "tracepulse.src.tracepulse.tracer",
         "peekOfCode": "def trace_block(name: str, *, tags: Optional[Dict[str, Any]] = None, sample_rate: float = 1.0):\n    \"\"\"Context manager for tracing an arbitrary code block.\n    Example:\n        with trace_block(\"startup\", tags={\"phase\":\"init\"}):\n            do_startup()\n    \"\"\"\n    start = time.perf_counter()\n    extra = _get_context()\n    if tags:\n        extra.update(tags)",
-        "detail": "tracepulse.tracepulse.tracer",
+        "detail": "tracepulse.src.tracepulse.tracer",
+        "documentation": {}
+    },
+    {
+        "label": "test_sync_trace",
+        "kind": 2,
+        "importPath": "tracepulse.tests.test_tracepulse",
+        "description": "tracepulse.tests.test_tracepulse",
+        "peekOfCode": "def test_sync_trace():\n    \"\"\"Test sync function tracing.\"\"\"\n    @trace\n    def add(a, b):\n        return a + b\n    result = add(2, 3)\n    assert result == 5\ndef test_async_trace():\n    \"\"\"Test async function tracing.\"\"\"\n    @trace",
+        "detail": "tracepulse.tests.test_tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "test_async_trace",
+        "kind": 2,
+        "importPath": "tracepulse.tests.test_tracepulse",
+        "description": "tracepulse.tests.test_tracepulse",
+        "peekOfCode": "def test_async_trace():\n    \"\"\"Test async function tracing.\"\"\"\n    @trace\n    async def async_add(a, b):\n        await asyncio.sleep(0.01)\n        return a + b\n    result = asyncio.run(async_add(2, 3))\n    assert result == 5\ndef test_trace_block():\n    \"\"\"Test trace_block context manager.\"\"\"",
+        "detail": "tracepulse.tests.test_tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "test_trace_block",
+        "kind": 2,
+        "importPath": "tracepulse.tests.test_tracepulse",
+        "description": "tracepulse.tests.test_tracepulse",
+        "peekOfCode": "def test_trace_block():\n    \"\"\"Test trace_block context manager.\"\"\"\n    with trace_block(\"test_operation\", tags={\"test\": True}):\n        x = sum(range(100))\n    assert x == 4950\ndef test_context():\n    \"\"\"Test context helpers.\"\"\"\n    token = set_context({\"request_id\": \"test-123\"})\n    assert token is not None\n    clear_context(token)",
+        "detail": "tracepulse.tests.test_tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "test_context",
+        "kind": 2,
+        "importPath": "tracepulse.tests.test_tracepulse",
+        "description": "tracepulse.tests.test_tracepulse",
+        "peekOfCode": "def test_context():\n    \"\"\"Test context helpers.\"\"\"\n    token = set_context({\"request_id\": \"test-123\"})\n    assert token is not None\n    clear_context(token)\ndef test_sampling():\n    \"\"\"Test sampling works without errors.\"\"\"\n    @trace(sample_rate=0.5)\n    def maybe_traced():\n        return 42",
+        "detail": "tracepulse.tests.test_tracepulse",
+        "documentation": {}
+    },
+    {
+        "label": "test_sampling",
+        "kind": 2,
+        "importPath": "tracepulse.tests.test_tracepulse",
+        "description": "tracepulse.tests.test_tracepulse",
+        "peekOfCode": "def test_sampling():\n    \"\"\"Test sampling works without errors.\"\"\"\n    @trace(sample_rate=0.5)\n    def maybe_traced():\n        return 42\n    result = maybe_traced()\n    assert result == 42\nif __name__ == \"__main__\":\n    test_sync_trace()\n    test_async_trace()",
+        "detail": "tracepulse.tests.test_tracepulse",
         "documentation": {}
     }
 ]
